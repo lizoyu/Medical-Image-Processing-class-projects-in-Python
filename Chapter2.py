@@ -8,6 +8,14 @@ import numpy as np
 ###################################################
 
 #Grey Scale Quantization / Intensity Reduction
+#NOTE
+# It's used for quantizing the grey scale in an image.
+#INPUT
+# img: input image
+# GreyScaleLevel: the amount of grey scale used for quantization
+#   - range: 0~8 int
+#OUTPUT
+# res: processed image
 def gsq(img, GreyScaleLevel):
     IntLv = GreyScaleLevel
     img = np.array(img, np.int16)
@@ -15,6 +23,12 @@ def gsq(img, GreyScaleLevel):
     return res
 
 #Halftone Printing
+#NOTE
+# Create the effect of halftone printing on newspaper
+#INPUT
+# img: input image
+#OUTPUT
+# empty: processed image
 def halftone(img):
     height,width = img.shape[:2]
     empty = np.zeros((3*height,3*width), np.uint8)
@@ -54,6 +68,18 @@ def halftone(img):
     return empty
 
 #Resize
+#NOTE
+# change the size of the image according to the ratio
+#INPUT
+# img: input image
+# ratio: the resize ratio, shape x ratio = new shape
+# Interpolation: method of interpolation
+#   - range:
+#       cv2.INTER_AREA (recommend when ratio < 1)
+#       cv2.INTER_CUBIC
+#       cv2.INTER_LINEAR (recommend when ratio > 1)
+#OUTPUT
+# res: processed image
 def resize(img, ratio, Interpolation):
     n = ratio
     itp = Interpolation
@@ -63,6 +89,19 @@ def resize(img, ratio, Interpolation):
     return res
 
 #Arithmetic
+#NOTE
+# add, minus, multiply and divide two images
+#INPUT
+# img1: input image 1
+# img2: input image 2
+# method: the way to deal with these two images
+#   - range:
+#       'add'
+#       'minus'
+#       'multi'
+#       'divide'
+#OUTPUT
+# res: processed image
 def arith(img1,img2,method):
     height,width = img1.shape
     img2 = cv2.resize(img2,(width,height))

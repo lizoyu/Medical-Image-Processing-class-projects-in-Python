@@ -9,11 +9,24 @@ import matplotlib.pyplot as plt
 ##############################################################
 
 #Histogram
+#NOTE
+# show the histogram of the image
+#INPUT
+# img: input image
+#OUTPUT
+# none
 def hist(img):
     plt.hist(img.ravel(),256,[0,255])
     plt.show()
 
 #Histogram Equalization
+#NOTE
+# equalize the distribution of the grey scale in an image according to its
+# histogram
+#INPUT
+# img: input image
+#OUTPUT
+# res: processed image
 def equHist(img):
     size = img.size
     x = np.linspace(0,(size-1),num = size)
@@ -36,7 +49,13 @@ def equHist(img):
     res = cv2.LUT(img, lut)
     return res
 
-#Discreet Fourier Transform
+#Discrete Fourier Transform
+#NOTE
+# Do the DFT on an image and show it
+#INPUT
+# img: input image
+#OUTPUT
+# none
 def fft(img):
     f = np.fft.fft2(img)
     fshift = np.fft.fftshift(f)
@@ -50,6 +69,13 @@ def fft(img):
     plt.show()
 
 #Log Transform
+#NOTE
+# do the log transform on an image
+#INPUT
+# img: input image
+# coefficient: the coefficient of the log transform function
+#OUTPUT
+# res: processed image
 def log(img, coefficient):
     c = coefficient
     logimg = np.array(img, np.uint16)
@@ -60,6 +86,14 @@ def log(img, coefficient):
     return res
 
 #Scalar Transform
+#NOTE
+# do the scalar transform on an image
+#INPUT
+# img: input image
+# coefficient: the coefficient of the scalar transform function
+# gamma: the power of the scalar transform function
+#OUTPUT
+# res: processed image
 def scalr(img, coefficient, gamma):
     c = coefficient
     y = gamma

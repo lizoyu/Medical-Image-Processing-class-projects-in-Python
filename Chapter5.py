@@ -8,6 +8,14 @@ import numpy as np
 ###################################################
 
 #Gaussian Noise Addition
+#NOTE
+# add a gaussian noise to an image
+#INPUT
+# img: input image
+# mean: the average value of the noise
+# variance: the variance of the noise
+#OUTPUT
+# img_gaussed: processed image
 def addGaussianNoise(img, mean, variance):
     height,width = img.shape[:2]
     gauss = np.random.normal(mean, np.sqrt(variance), (height,width))
@@ -18,6 +26,16 @@ def addGaussianNoise(img, mean, variance):
 
 
 #Salt-and-Pepper Noise Addition
+#NOTE
+# add salt and pepper noise to an image
+#INPUT
+# img: input image
+# saltprob: the occuring probability of salt noise
+#   - range: 0 ~ 1
+# pepperprob: the occuring probability of pepper noise
+#   - range: 0 ~ 1
+#OUTPUT
+# img_sped: processed image
 def addSaltPepperNoise(img, saltprob, pepperprob):
     height,width = img.shape[:2]
 
@@ -32,11 +50,25 @@ def addSaltPepperNoise(img, saltprob, pepperprob):
     return img_sped
 
 #1-D Random Number Generator
+#NOTE
+# generate an array of random numbers
+#INPUT
+# size: the length of the array
+#OUTPUT
+# r: an array of random numbers
 def rand_1D(size):
     r = np.random.rand(size)
     return r
 
 #Motion Blur
+#NOTE
+# create the motion blur effect on an image
+#INPUT
+# img: input image
+# a,b: scalars of input image
+# T: duration of exposure
+#OUTPUT
+# res: processed image
 def blurring(img,a,b,T):
     height,width = img.shape[:2]
     H = np.zeros((height,width), np.complex)
@@ -56,6 +88,7 @@ def blurring(img,a,b,T):
     f = np.fft.fftshift(np.fft.fft2(img))
     f = f * H
     res = np.fft.ifft2(np.fft.ifftshift(f))
+    res = np.array(res, dtype = np.int)
            
     return res
 
