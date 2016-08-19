@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+NEED REWRITE
 ###################################################
 #                                                 #
 #   Chapter4 - Filtering in the Frequency Domain  #

@@ -8,6 +8,15 @@ import numpy as np
 ###################################################
 
 #Improved Grey Scale Quantization
+#NOTE
+# an improved algorithm compared to the one in Chapter 2
+#INPUT
+# img: input image
+# GreyScaleLevel: the amount of grey scale used for quantization
+#   - range: 0~8 int
+#OUTPUT
+# res: processed image
+
 def igsq(img, GreyScaleLevel):
     height,width = img.shape[:2]
     x = 0;y = 0;sum = 0;

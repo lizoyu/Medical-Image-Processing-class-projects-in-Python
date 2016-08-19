@@ -93,7 +93,15 @@ def blurring(img,a,b,T):
     return res
 
 #Wiener Filtering
-def wiener(img):
+#NOTE
+# restore the degraded image using Wiener filtering, if you want to change the
+# degradation function, please change H[u,v] by yourself.
+#INPUT
+# img: input image (degraded image)
+# K: interactive constant to get the best result
+#OUTPUT
+# res: processed image
+def wiener(img, K):
     height,width = img.shape[:2]
     H = np.zeros((height,width), np.complex)
     a = 0.1
@@ -112,7 +120,7 @@ def wiener(img):
             v = 0
             u += 1
 
-    K = 0.065
+    #K = 0.065
     coe = (np.power(np.abs(H),2)) / (H * (np.power(np.abs(H),2)+K))
     G = np.fft.fftshift(np.fft.fft2(img))
     F = coe * G
