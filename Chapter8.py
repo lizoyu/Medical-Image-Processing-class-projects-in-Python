@@ -40,6 +40,14 @@ def igsq(img, GreyScaleLevel):
     return res
 
 #RMS & SNR
+#NOTE
+# calculate the root mean square and signal-to-noise ratio of the image
+#INPUT
+# rawImg: input original image
+# processedImg: input processed or noised image
+#OUTPUT
+# rms: root mean square
+# snr: signal-to-noise ratio
 def ofc(rawImg, processedImg):
     size = rawImg.size
     rawImg = np.array(rawImg, np.float32)
@@ -52,6 +60,13 @@ def ofc(rawImg, processedImg):
     return rms, snr
 
 #1-order & 2-order Image Entropy
+#NOTE
+# calculate 1 & 2-order image entropy of the image
+#INPUT
+# img: input original image
+#OUTPUT
+# entro: root mean square
+# entro2: signal-to-noise ratio
 def entropy(img):
     x = np.linspace(0, (img.size-1), num = img.size)
     y = np.linspace(1,255, num = 255)

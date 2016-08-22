@@ -1,4 +1,3 @@
-# -*- coding: cp936 -*-
 import cv2
 import numpy as np
 
@@ -9,11 +8,18 @@ import numpy as np
 ###################################################
 
 #Erosion
-#Note:
-#SElength - 结构元的边长
-#SEMorph - 结构元的形状
-#  包含在openCV中,形式是cv2.MORPH_*,具体请查看opencv说明
-#
+#NOTE
+# erode the image (you can use cv2.erode() directly)
+#INPUT
+# img: input binary image
+# SElength: the length of the structural elements
+# SEMorph: the shape of the structural elements
+#   - range:
+#       cv2.MORPH_RECT (rectangular kernel)
+#       cv2.MORPH_ELLIPSE (elliptical kernel)
+#       cv2.MORPH_CROSS (cross-shaped kernel)
+#OUTPUT
+# newimg: eroded image
 def erosion(img,SElength,SEMorph):
     size = SElength
     b = (size-1)/2
@@ -40,9 +46,18 @@ def erosion(img,SElength,SEMorph):
     return newimg
 
 #Dilation
-#Note:
-#输入参数说明与腐蚀的相同
-#
+#NOTE
+# dilate the image (you can use cv2.dilate() directly)
+#INPUT
+# img: input binary image
+# SElength: the length of the structural elements
+# SEMorph: the shape of the structural elements
+#   - range:
+#       cv2.MORPH_RECT (rectangular kernel)
+#       cv2.MORPH_ELLIPSE (elliptical kernel)
+#       cv2.MORPH_CROSS (cross-shaped kernel)
+#OUTPUT
+# newimg: dilated image
 def dilation(img,SElength,SEMorph):
     size = SElength
     b = (size-1)/2
@@ -68,6 +83,13 @@ def dilation(img,SElength,SEMorph):
     return newimg
 
 #Intersection
+#NOTE
+# intersect the two input binary images
+#INPUT
+# img1: input binary image 1
+# img2: input binary image 2
+#OUTPUT
+# img3: processed image
 def intersection(img1,img2):
     img1[img1==255] = 1
     img2[img2==255] = 1
@@ -78,11 +100,24 @@ def intersection(img1,img2):
     return img3
 
 #Differencing
+#NOTE
+# input image 1 minus input binary image 2
+#INPUT
+# img1: input binary image 1
+# img2: input binary image 2
+#OUTPUT
+# img3: processed image
 def differencing(img1,img2):
     img3 = img1-img2
     return img3
 
 #Complementation
+#NOTE
+# get the complement of the binary image
+#INPUT
+# img: input binary image
+#OUTPUT
+# img: processed image
 def complementation(img):
     img[img==255] = 1
 
