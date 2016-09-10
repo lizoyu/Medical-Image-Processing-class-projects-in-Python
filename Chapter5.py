@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import scipy.ndimage.interpolation
 
 ###################################################
 #                                                 #
@@ -127,4 +128,65 @@ def wiener(img, K):
     img = np.fft.ifft2(np.fft.ifftshift(F))
 
     res = np.array(img, np.uint8)
+    return res
+
+#Radon Transform
+#NOTE
+# do the randon transform on the input image and get its sinogram
+#INPUT
+# img: input image
+# rate: angle of each rotation
+#OUTPUT
+# res: sinogram of the input image
+def radon(img, rate):
+    img = np.array(img, np.float32)
+    height,width = img.shape[:2]
+    ang = np.linspace(0, 180, num = 180/rate, endpoint = False)
+
+    radon = np.array([
+        np.sum(
+            scipy.ndimage.interpolation.rotate(
+                img,angle,order = 1,reshape = False
+                )
+            ,axis = 1
+            )for angle in ang
+    ])
+
+    res = 255 * (radon - np.min(radon)) / (np.max(radon) - np.min(radon))
+    return res
+
+#Filtered Backprojection
+#NOTE
+# use the input singram to backproejct the original image
+#INPUT
+# img: input sinogram
+# rate: the rotation angle of the sinogram
+#OUTPUT
+# res: backprojected image
+def fbp(img, rate):
+    img = np.array(img, np.float32)
+    height, width = img.shape
+    
+    # Build the ramp filter with hamming window
+    w = np.linspace(0, width, num = width, endpoint = False)
+    hamming = 0.54 - 0.46*np.cos(2*np.pi*w/(width-1))
+    ramp = hamming * np.abs(w - width/2)
+    H = np.fft.ifftshift(ramp)
+    
+    # Filter the sinogram
+    F = np.fft.fft(img, axis = 0)
+    F = H * F
+    F = np.fft.ifft(F, axis = 0)
+
+    # Backprojection
+    iradon = np.zeros((width,width))
+    for i in range(0, width):
+        iradon = scipy.ndimage.interpolation.rotate(
+            iradon,rate,order = 1,reshape = False)
+        iradon = iradon + np.tile(iradon(i,:),(width,1))
+
+    iradon = scipy.ndimage.interpolation.rotate(
+            iradon,90,order = 1,reshape = False)
+    iradon = iradon / height
+    res = np.round(255 * (iradon - np.min(iradon)) / (np.max(iradon) - np.min(iradon)))
     return res
