@@ -160,33 +160,32 @@ def radon(img, rate):
 # use the input singram to backproejct the original image
 #INPUT
 # img: input sinogram
-# rate: the rotation angle of the sinogram
 #OUTPUT
 # res: backprojected image
-def fbp(img, rate):
+def fbp(img):
     img = np.array(img, np.float32)
     height, width = img.shape
+    rate = 180.0 / height
     
     # Build the ramp filter with hamming window
     w = np.linspace(0, width, num = width, endpoint = False)
     hamming = 0.54 - 0.46*np.cos(2*np.pi*w/(width-1))
     ramp = hamming * np.abs(w - width/2)
     H = np.fft.ifftshift(ramp)
-    
-    # Filter the sinogram
-    F = np.fft.fft(img, axis = 0)
-    F = H * F
-    F = np.fft.ifft(F, axis = 0)
-
-    # Backprojection
+       
+    # Filter the sinogram and backproject
     iradon = np.zeros((width,width))
-    for i in range(0, width):
+    for i in range(0, height):
+        img[i,:] = cv2.dft(img[i,:]).reshape((500,)) * H
+        img[i,:] = cv2.idft(img[i,:]).reshape((500,))
+    
         iradon = scipy.ndimage.interpolation.rotate(
             iradon,rate,order = 1,reshape = False)
-        iradon = iradon + np.tile(iradon(i,:),(width,1))
+        iradon = iradon + np.tile(img[i,:], (width,1))
 
     iradon = scipy.ndimage.interpolation.rotate(
-            iradon,90,order = 1,reshape = False)
-    iradon = iradon / height
+        iradon,90,order = 1,reshape = False)
+    #iradon = iradon / height
     res = np.round(255 * (iradon - np.min(iradon)) / (np.max(iradon) - np.min(iradon)))
+
     return res
