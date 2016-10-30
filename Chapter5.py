@@ -3,9 +3,9 @@ import numpy as np
 import scipy.ndimage.interpolation
 
 ###################################################
-#                                                 #
-#  Chapter5 - Image Restoration & Reconstruction  #
-#                                                 #
+#                                                                                                  #
+#           Chapter5 - Image Restoration & Reconstruction          #
+#                                                                                                  #
 ###################################################
 
 #Gaussian Noise Addition
@@ -140,15 +140,18 @@ def wiener(img, K):
 # res: sinogram of the input image
 def radon(img, rate):
     img = np.array(img, np.float32)
-    height,width = img.shape[:2]
-    ang = np.linspace(0, 180, num = 180/rate, endpoint = False)
+    ang = np.linspace(90, 270, num = 180.0/rate, endpoint = False)
+
+    diagonal = np.ceil(img.shape[0] * np.sqrt(2))
+    zeropad = np.zeros((img.shape[0], np.round((diagonal - img.shape[0]) / 2)))
+    img = np.hstack((zeropad, img, zeropad))
 
     radon = np.array([
         np.sum(
             scipy.ndimage.interpolation.rotate(
                 img,angle,order = 1,reshape = False
                 )
-            ,axis = 1
+            ,axis = 0
             )for angle in ang
     ])
 
@@ -166,6 +169,7 @@ def fbp(img):
     img = np.array(img, np.float32)
     height, width = img.shape
     rate = 180.0 / height
+    originalwidth = np.round(width / np.sqrt(2))
     
     # Build the ramp filter with hamming window
     w = np.linspace(0, width, num = width, endpoint = False)
@@ -183,9 +187,9 @@ def fbp(img):
             iradon,rate,order = 1,reshape = False)
         iradon = iradon + np.tile(img[i,:], (width,1))
 
-    iradon = scipy.ndimage.interpolation.rotate(
-        iradon,90,order = 1,reshape = False)
-    #iradon = iradon / height
+    iradon = iradon / height
     res = np.round(255 * (iradon - np.min(iradon)) / (np.max(iradon) - np.min(iradon)))
 
+    iradon = iradon[
+        width/2-originalwidth/2:width/2+originalwidth/2,width/2-originalwidth/2:width/2+originalwidth/2]
     return res

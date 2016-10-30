@@ -32,8 +32,8 @@ def gaussian(img,cutOffFreq):
         for v in range(0, 2*width):
             D[u,v] = np.sqrt(np.power((u - 2*height/2), 2)+np.power((v - 2*width/2), 2))
     H = np.zeros((2*height, 2*width))
-    for u in range(0, 596):
-        for v in range(0, 400):
+    for u in range(0, 2*height):
+        for v in range(0, 2*width):
             H[u,v] = np.exp(-np.power(D[u,v], 2)/(2*np.power(D0, 2))) # Gaussian
 
     img_fq[:,:,0] = img_fq[:,:,0] * H
